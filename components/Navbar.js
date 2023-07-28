@@ -11,19 +11,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import Link from 'next/link';
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default function Navbar() {
   const supabase = createClientComponentClient();
   const { user } = useUser();
 
   const handleGoogleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-
-    if (error) {
-      console.log({ error });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
+      if (data) redirect("/");
+      else throw new Error("Something went wrong");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -34,7 +37,7 @@ export default function Navbar() {
     }
   };
   return (
-    <div className='py-2 border-b border-slate-200'>
+    <div className='px-4 lg:px-0 py-2 border-b border-slate-200'>
       <nav className='max-w-7xl mx-auto h-fit  flex justify-between items-center'>
         <Link href='/' className='font-extrabold text-lg'>
           Intellify

@@ -14,12 +14,14 @@ const Home = () => {
   const supabase = createClientComponentClient();
 
   const handleGoogleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-
-    if (error) {
-      console.log({ error });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
+      if (data) redirect("/");
+      else throw new Error("Something went wrong");
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
